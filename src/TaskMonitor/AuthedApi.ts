@@ -33,7 +33,7 @@ export default (app) => {
         queryData.start_time = req.body.start_time || new Date(new Date().setHours(0, 0, 0, 0)).toISOString()
         queryData.end_time = req.body.end_time || new Date(new Date().setHours(23, 59, 59, 999)).toISOString()
 
-        const taskList = await model.getAllTasksForUser(queryData)
+        const taskList = await model.getAllPendingTasksForUser(queryData)
 
         if (!taskList) {
             res.status(400).send({ message: 'Error occured while retrieving tasks' })
@@ -79,6 +79,53 @@ export default (app) => {
 
         const timeReport = await model.getTasksReportForInterval(intervals)
 
-        res.status(200).send({data: timeReport})
+        res.status(200).send({ data: timeReport })
+    })
+
+    app.post('/task_status', async (req, res) => {
+        if (!req.body) {
+            res.status(400).send({ message: 'No data Provided' })
+            return
+        }
+
+        const result = await model.updateTask({ id: req.body.task_id }, { status: req.body.status })
+
+        if (!result) {
+            res.status(400).send({ message: 'An error occured while updating Task' })
+        }
+
+        res.status(200).send({ data: result })
+    })
+
+    app.post('/pause_task', async (req, res) => {
+        if (!req.body) {
+            res.status(400).send({ message: 'No data Provided' })
+            return
+        }
+
+        await model.updateTask({ id: req.body.task_id }, { status: 'paused' })
+        const result = await model.insertInterval({
+            task_id: req.body.task_id,
+            start_time: req.body.start_time,
+            end_time: req.body.end_time
+        })
+
+        res.status(200).send({ data: result })
+    })
+
+    app.post('/complete_task', async (req, res)=>{
+        if (!req.body) {
+            res.status(400).send({ message: 'No data Provided' })
+            return
+        }
+
+        await model.updateTask({ id: req.body.task_id }, { status: 'completed' })
+        const result = await model.insertInterval({
+            task_id: req.body.task_id,
+            start_time: req.body.start_time,
+            end_time: req.body.end_time
+        })
+
+        res.status(200).send({ data: result })
     })
 }

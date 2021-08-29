@@ -40,7 +40,7 @@ pg.raw('CREATE DATABASE efficient').then(async function () {
         table.string('name').notNullable()
         table.string('description')
         table.integer('user_id').notNullable()
-        table.boolean('completed').defaultTo(false)
+        table.string('status').notNullable().defaultTo('created')
     }).then((value)=>{
         console.log('-tasks created')
     })

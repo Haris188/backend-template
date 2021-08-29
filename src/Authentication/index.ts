@@ -47,8 +47,10 @@ export default (app) => {
             if (err || !user || user.error) {
                 console.log(err)
                 return res.status(400).json({
-                    message: info ? info.message : "Login failed",
-                    user
+                    data: {
+                        message: info ? info.message : "Login failed",
+                        user
+                    }
                 })
             }
 
@@ -62,7 +64,7 @@ export default (app) => {
                     user,
                     process.env.JWT_SECRET,
                     { expiresIn: '1h' })
-                return res.json({ data: { userRes, token } })
+                return res.json({ data: { user, token } })
             })
         })(req, res, next)
     })

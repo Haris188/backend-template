@@ -11,6 +11,11 @@ dotenv.config()
 
 const app:any = express()
 
+app.use((req,res,next)=>{
+    console.log('somebody reached')
+    next()
+})
+
 setupApp(app)
 
 installAuthentication(app)
