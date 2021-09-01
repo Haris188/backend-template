@@ -8,11 +8,13 @@ import installTaskMonitorApi from './TaskMonitor'
 import installAuthedTaskMonitorApi from './TaskMonitor/AuthedApi'
 
 dotenv.config()
+let count = 1
 
 const app:any = express()
 
 app.use((req,res,next)=>{
-    console.log('somebody reached')
+    console.log(`served ${count} requests`)
+    count++
     next()
 })
 

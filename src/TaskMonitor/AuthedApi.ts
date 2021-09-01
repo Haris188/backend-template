@@ -128,4 +128,10 @@ export default (app) => {
 
         res.status(200).send({ data: result })
     })
+
+    app.post('/delete_task/:task_id', async (req, res)=>{
+        const {task_id} = req.params
+        const data = await model.updateTask({id: task_id}, {status: 'deleted'})
+        res.status(200).send({data})
+    })
 }

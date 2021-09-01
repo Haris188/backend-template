@@ -16,6 +16,7 @@ export const getAllPendingTasksForUser = async (queryData) => {
         // .andWhere('start_time', '>', queryData.start_time)
         // .andWhere('end_time', '<', queryData.end_time)
         .andWhere('status','<>', 'completed')
+        .andWhere('status', '<>', 'deleted')
         .orderBy('start_time', 'asc')
         .catch(e => {
             console.log(e)
