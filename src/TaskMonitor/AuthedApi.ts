@@ -134,4 +134,15 @@ export default (app) => {
         const data = await model.updateTask({id: task_id}, {status: 'deleted'})
         res.status(200).send({data})
     })
+
+    app.post('/get_latest_interval', async (req, res)=>{
+        if (!req.body) {
+            res.status(400).send({ message: 'No data Provided' })
+            return
+        }
+
+        const result = await model.getLatestInterval(req.body.task_id)
+
+        res.status(200).send({ data: result })
+    })
 }

@@ -64,3 +64,17 @@ export const updateTask = async (where, data) => {
 
     return updated
 }
+
+export const getLatestInterval = async (task_id:number) => {
+    const result = await Db.select('*')
+    .from('intervals')
+    .where('task_id', task_id)
+    .orderBy('id', 'desc')
+    .limit(1)  
+    .catch(e => {
+        console.log(e)
+        return null
+    })
+    
+    return result.rows && result.rows.length > 0 ? result.rows[0] : null
+}
